@@ -1,0 +1,9 @@
+﻿test.jpg
+*.jpg
+*.jpeg
+*.png
+*.heic
+*.bak
+__pycache__/
+.gradio/
+.venv/
