@@ -1,5 +1,5 @@
 ﻿import os
-os.environ["GRADIO_ANALYTICS_ENABLED"] = "False"  # no telemetry
+os.environ["GRADIO_ANALYTICS_ENABLED"] = "False" 
 
 import html
 import gradio as gr
@@ -12,7 +12,7 @@ MODES = {
 }
 MAX_BYTES = 10 * 1024 * 1024
 
-# (low, high, label, name, blurb) - edit these to change the score guide
+
 TIERS = [
     (1, 3, "1&ndash;3", "Change the clothes", "Back to the wardrobe."),
     (4, 5, "4&ndash;5", "Needs work", "Good bones, rethink a piece or two."),
@@ -21,7 +21,7 @@ TIERS = [
     (9, 10, "9&ndash;10", "Greek god / goddess", "Statue-in-a-museum energy."),
 ]
 
-MESSAGES = [  # keep exactly 6, the CSS timing assumes it
+MESSAGES = [  
     "Counting your layers...",
     "Checking if the colors get along...",
     "Consulting the style council (it's one small model)...",
@@ -29,7 +29,7 @@ MESSAGES = [  # keep exactly 6, the CSS timing assumes it
     "Everything runs on this laptop. No cloud involved.",
     "Good fits take a minute. Almost there...",
 ]
-SLOT = 4  # seconds each message stays on screen
+SLOT = 4 
 
 CSS = """
 body, .gradio-container { background: #faf9f6 !important; color-scheme: light;
