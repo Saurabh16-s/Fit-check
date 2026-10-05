@@ -1,63 +1,63 @@
-﻿# FitCheck
+﻿# FitCheck: Google Gemma 3 writes the verdict
 
-Upload a photo of your outfit and get a score out of 10, a short tagline, what works, and one tweak. It runs entirely on a laptop through open models, with no GPU and no cloud, so the photo never leaves the machine.
+Upload a photo of your outfit and get a score out of 10, a tagline, what works, and one tweak. **Every score and every line of feedback is written by Google Gemma 3, Google's open-weight model**, running locally on a CPU-only laptop with 8 GB of RAM. No cloud, no API key, no GPU.
 
-Built for a friend for the DEV Hacktoberfest 2026 "Build for a Friend" challenge.
+Built for a friend for the DEV Hacktoberfest 2026 "Build for a Friend" challenge (Best Use of Gemma).
 
-## How it works
+## Google Gemma is the core
 
-1. **moondream** (via Ollama) looks at the photo and lists only the clothes and accessories.
-2. **gemma3:1b** (via Ollama) reads that description and writes the score, tagline, and tips as JSON.
-3. A **Gradio** page ties it together. Pick a personality: hype bestie, brutally honest, or fashion critic. A score guide shows what each range means.
+- **Google Gemma 3 1B is the judge.** It reads an outfit description and returns the score, tagline, "what looks good", and the suggestion as structured JSON, in the personality you pick.
+- **Google Gemma's personality is plain text.** Hype bestie, brutally honest, and fashion critic are prompt strings in `modes.py`. Changing how Google Gemma judges is a text edit, with no retraining and no account.
+- **Google Gemma 3 4B came first.** It can look at the photo itself and worked, but took about 4.5 minutes per photo on this laptop. Giving Google Gemma 1B only the text part cut that to about 72 seconds. With more RAM, change `TEXT_MODEL` in `judge.py` to a bigger Google Gemma and compare.
+- **A small helper reads the photo.** Google Gemma 3 1B is text-only, so moondream first lists the clothes in the picture, then unloads to free memory. It is the only non-Gemma model in the app.
 
-Each model is unloaded right after use (`keep_alive=0`), so only one is in RAM at a time.
+## Why open-weight Google Gemma mattered here
 
-## Why open models
+- Runs fully offline once the weights are downloaded.
+- The photo stays on the machine. The page listens on 127.0.0.1 only, with no share link and analytics turned off.
+- Swapping the model or rewriting the judge takes one line, not a new vendor.
 
-- Everything runs offline once the models are downloaded.
-- The photo stays on the machine. The Gradio app listens on 127.0.0.1 only, with no share link and analytics turned off.
-- The judge's personality is just a string in `modes.py`, so changing it or swapping a model is a one-line edit with no retraining.
-
-## Setup (Windows, tested on 8 GB RAM, no GPU)
-
-1. Install Ollama from https://ollama.com/download
-2. Pull the models:
-
-        ollama pull moondream
-        ollama pull gemma3:1b
-
-3. Install the Python packages. Use `python -m pip` so they go into the same Python you will run the app with:
-
-        python -m pip install -r requirements.txt
-
-4. Start the app and open http://127.0.0.1:7860
-
-        python app.py
-
-You can also test from the command line:
-
-    python judge.py your-photo.jpg hype_bestie
-
-Modes: `hype_bestie`, `brutally_honest`, `fashion_critic`.
-
-## Measured on my laptop (8 GB RAM, CPU only)
+## Measured on an 8 GB, CPU-only laptop
 
 | Setup | Time per photo |
 |---|---|
-| gemma3:4b alone (sees the photo directly) | about 4.5 minutes |
-| moondream + gemma3:1b (this repo) | about 72 seconds |
+| Google Gemma 3 4B alone (sees the photo directly) | about 4.5 minutes |
+| moondream + Google Gemma 3 1B (this repo) | about 72 seconds |
+
+## Setup (Windows)
+
+1. Install [Ollama](https://ollama.com/download) (it downloads and runs the models locally).
+2. Get the models:
+
+```
+ollama pull gemma3:1b
+ollama pull moondream
+```
+
+3. Install the Python packages. Use `python -m pip` so they go into the same Python you will run the app with:
+
+```
+python -m pip install -r requirements.txt
+```
+
+4. Start the app and open http://127.0.0.1:7860
+
+```
+python app.py
+```
+
+Command-line test: `python judge.py your-photo.jpg hype_bestie` (modes: `hype_bestie`, `brutally_honest`, `fashion_critic`).
 
 ## Known limits
 
 - About a minute per photo on CPU.
-- Moondream's descriptions are thin and can miss items, and the 1B text model can only judge what it is told.
+- moondream's descriptions are thin and can miss items, and Google Gemma 1B can only judge what it is told.
 - Small models tend to be generous with scores. The personas help, but they are not a fix.
-- No fine-tuning was done. Behavior comes from prompts only.
 
 ## Files
 
-- `app.py`: Gradio UI
-- `judge.py`: describe, then judge, with JSON parsing and one retry
-- `modes.py`: prompts and personalities
+- `app.py`: web page
+- `judge.py`: moondream describes, Google Gemma judges, with JSON parsing and one retry
+- `modes.py`: Google Gemma's prompts and personalities
 
 Photos are git-ignored on purpose. Please do not commit anyone's pictures.
