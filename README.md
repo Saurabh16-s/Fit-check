@@ -2,7 +2,7 @@
 
 Upload a photo of your outfit and get a score out of 10, a tagline, what works, and one tweak. **Every score and every line of feedback is written by Google Gemma 3, Google's open-weight model**, running locally on a CPU-only laptop with 8 GB of RAM. No cloud, no API key, no GPU.
 
-Built for a friend for the DEV Hacktoberfest 2026 "Build for a Friend" challenge (Best Use of Gemma).
+Built for a friend for the DEV Hacktoberfest 2026 "Build for a Friend" challenge (Best Use of Gemma)
 
 ## Google Gemma is the core
 
